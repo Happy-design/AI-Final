@@ -114,11 +114,13 @@ def set_webhook():
     else:
         return "Webhook setup Failed"
 
+import asyncio
+
 @app.route('/webhook', methods=["POST"])
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
     print(update.to_dict()) 
-    
+
     async def handle_message():
         if update.message:
             text = update.message.text
@@ -135,7 +137,18 @@ def webhook():
                     await bot.send_message(chat_id=chat_id, text=f'Your predicted food expenditure is {prediction:.2f}')
                 except ValueError:
                     await bot.send_message(chat_id=chat_id, text='Invalid input. Please enter a valid number.')
-    asyncio.run(handle_message())
+
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+    if loop.is_running():
+        asyncio.ensure_future(handle_message())
+    else:
+        loop.run_until_complete(handle_message())
+
     return 'ok'
 
 if __name__ == "__main__":
