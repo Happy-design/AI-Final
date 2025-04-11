@@ -119,18 +119,19 @@ def webhook():
 
     if update.message:
         text = update.message.text
+        chat_id = update.message.chat.id
 
         if text.lower() == 'exit':
-            update.message.reply_text('Goodbye!')
+            update.message.reply_text(chat_id=chat_id, 'Goodbye!')
         elif text.lower() == '/start':
-            update.message.reply_text('Welcome to the food expenditure prediction. Please enter your income:')
+            update.message.reply_text(chat_id=chat_id, 'Welcome to the food expenditure prediction. Please enter your income:')
         else:
             try:
                 income = float(text)
                 prediction = (income * 0.4851) + 147.4
-                update.message.reply_text(f'Your predicted food expenditure is {prediction:.2f}')
+                update.message.reply_text(chat_id=chat_id, f'Your predicted food expenditure is {prediction:.2f}')
             except ValueError:
-                update.message.reply_text('Invalid input. Please enter a valid number.')
+                update.message.reply_text(chat_id=chat_id, 'Invalid input. Please enter a valid number.')
     return 'ok'
 
 if __name__ == "__main__":
