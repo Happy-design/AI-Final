@@ -122,6 +122,8 @@ def webhook():
 
         if text.lower() == 'exit':
             update.message.reply_text('Goodbye!')
+        elif text.lower() == '/start':
+            update.message.reply_text('Welcome to the food expenditure prediction. Please enter your income:')
         else:
             try:
                 income = float(text)
