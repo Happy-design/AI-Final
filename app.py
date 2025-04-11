@@ -117,22 +117,25 @@ def set_webhook():
 @app.route('/webhook', methods=["POST"])
 def webhook():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
+    print(update.to_dict()) 
+    
+    async def handle_message():
+        if update.message:
+            text = update.message.text
+            chat_id = update.message.chat.id
 
-    if update.message:
-        text = update.message.text
-        chat_id = update.message.chat.id
-
-        if text.lower() == 'exit':
-            await bot.send_message(chat_id=chat_id, text='Goodbye!')
-        elif text.lower() == '/start':
-            await bot.send_message(chat_id=chat_id, text='Welcome to the food expenditure prediction. Please enter your income:')
-        else:
-            try:
-                income = float(text)
-                prediction = (income * 0.4851) + 147.4
-                await bot.send_message(chat_id=chat_id, text=f'Your predicted food expenditure is {prediction:.2f}')
-            except ValueError:
-                await bot.send_message(chat_id=chat_id, text='Invalid input. Please enter a valid number.')
+            if text.lower() == 'exit':
+                await bot.send_message(chat_id=chat_id, text='Goodbye!')
+            elif text.lower() == '/start':
+                await bot.send_message(chat_id=chat_id, text='Welcome to the food expenditure prediction. Please enter your income:')
+            else:
+                try:
+                    income = float(text)
+                    prediction = (income * 0.4851) + 147.4
+                    await bot.send_message(chat_id=chat_id, text=f'Your predicted food expenditure is {prediction:.2f}')
+                except ValueError:
+                    await bot.send_message(chat_id=chat_id, text='Invalid input. Please enter a valid number.')
+    asyncio.run(handle_message())
     return 'ok'
 
 if __name__ == "__main__":
