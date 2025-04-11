@@ -5,6 +5,7 @@ import google.generativeai as genai
 import os
 import wikipedia
 import telegram
+import asyncio
 
 api = os.getenv("makersuite")
 model = genai.GenerativeModel("gemini-1.5-flash")
@@ -122,16 +123,16 @@ def webhook():
         chat_id = update.message.chat.id
 
         if text.lower() == 'exit':
-            bot.send_message(chat_id=chat_id, text='Goodbye!')
+            await bot.send_message(chat_id=chat_id, text='Goodbye!')
         elif text.lower() == '/start':
-            bot.send_message(chat_id=chat_id, text='Welcome to the food expenditure prediction. Please enter your income:')
+            await bot.send_message(chat_id=chat_id, text='Welcome to the food expenditure prediction. Please enter your income:')
         else:
             try:
                 income = float(text)
                 prediction = (income * 0.4851) + 147.4
-                bot.send_message(chat_id=chat_id, text=f'Your predicted food expenditure is {prediction:.2f}')
+                await bot.send_message(chat_id=chat_id, text=f'Your predicted food expenditure is {prediction:.2f}')
             except ValueError:
-                bot.send_message(chat_id=chat_id, text='Invalid input. Please enter a valid number.')
+                await bot.send_message(chat_id=chat_id, text='Invalid input. Please enter a valid number.')
     return 'ok'
 
 if __name__ == "__main__":
