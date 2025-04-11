@@ -15,7 +15,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         try:
             income = float(text)
-            prediction = 100 + 0.722 * income 
+            prediction = (income * 0.4851) + 147.4
             await update.message.reply_text(f'Your predicted food expenditure is {prediction:.2f}')
         except ValueError:
             await update.message.reply_text('Invalid input. Please enter a valid number.')
